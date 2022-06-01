@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 # TODO heap for contacts
 
 
-@dataclass
+@dataclass(frozen=True)
 class Contact:
     name: str
     number: str
@@ -24,8 +24,10 @@ class ContactList:
         self.contacts = [c for c in self.contacts if c["name"] != name]
 
     def find_shared_contacts(self, other_list):
-        others = set(contact["name"] for contact in other_list.contacts)
-        return [contact for contact in self.contacts if contact["name"] in others]
+        return ContactList(
+            name=f"{self.name} & {other_list.name}",
+            contacts=list(set(self.contacts) & set(other_list.contacts)),
+        )
 
 
 def main():
